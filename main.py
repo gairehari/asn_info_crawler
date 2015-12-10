@@ -30,7 +30,7 @@ def get_country_asn_data(url, country):
     table = soup.find(lambda tag: tag.name == 'table' and tag['id'] == 'asns')
 
     if table is None:
-        print 'No active ASNs found for country {0}'.format('country')
+        print 'No active ASNs found for country {0}'.format(country)
         return
 
     rows = table.findAll(lambda tag: tag.name == 'tr')
@@ -69,7 +69,6 @@ def main():
 
         country = tag['href'].strip('/country/')
         get_country_asn_data(link, country)
-        break
 
     dump_to_file()
 
