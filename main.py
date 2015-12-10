@@ -10,12 +10,16 @@ OUTPUT_DATA = {}
 
 
 def get_url_data(url):
+    ''' Get web page data from given url
+    '''
     request = urllib2.Request(url, headers={'User-Agent': 'Magic Browser'})
     response = urllib2.urlopen(request)
     return response
 
 
 def get_country_asn_data(url, country):
+    '''Find ASN information by converting table in HTML page to dictionary
+    '''
     global OUTPUT_DATA
 
     print 'Getting ASN for country {0}'.format(country)
@@ -37,18 +41,20 @@ def get_country_asn_data(url, country):
         d = [s.text for s in row.findAll('td')]
 
         data = dict(zip(headers[1:], d[1:]))
-        data['country'] = country
-        OUTPUT_DATA[d[0].strip('ASN')] = d
-
-    print OUTPUT_DATA
+        data['Country'] = country
+        OUTPUT_DATA[d[0].strip('ASN')] = data
 
 
 def dump_to_file():
+    '''Dump output to given file
+    '''
     with open(config.OUTPUT_FILE, 'wb') as f:
-        json.dumps(OUTPUT_DATA, f)
+        json.dump(OUTPUT_DATA, f, indent=4, sort_keys=True)
 
 
 def main():
+    '''Find ASN information from given website
+    '''
     url = '{0}{1}'.format(config.HOME_PAGE_URL, config.START_PAGE)
     data = get_url_data(url).read()
 
